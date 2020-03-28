@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+
+android {
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    flavorDimensions "default"
+    productFlavors {
+        StackOverflowServer {
+            buildConfigField "String", "STACK_OVERFLOW_APPLICATION_ID", "\"c3)oDb076jM6asA7Ltft3A((\""
+            buildConfigField "String", "SERVER_URL", "\"https://api.stackexchange.com/2.2/\""
+        }
+    }
+    defaultConfig {
+        applicationId "com.stack.overflow.users"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.appcompat:appcompat:${rootProject.ext.supportLibrary}"
+    implementation "androidx.recyclerview:recyclerview:${rootProject.ext.recyclerView}"
+    implementation "com.google.android.material:material:${rootProject.ext.materialDesign}"
+    implementation "com.ToxicBakery.viewpager.transforms:view-pager-transforms:${rootProject.ext.viewPagerTransform}"
+    // reactivex
+    implementation "io.reactivex.rxjava2:rxjava:${rootProject.ext.rxjava2}"
+    implementation "io.reactivex.rxjava2:rxandroid:${rootProject.ext.rxandroid}"
+    // com.square up
+    implementation "com.squareup.okhttp:okhttp:${rootProject.ext.okhttp}"
+    implementation "com.squareup.rx.idler:rx2-idler:${rootProject.ext.idler}"
+    implementation "com.squareup.okhttp3:okhttp:${rootProject.ext.okhttp3}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${rootProject.ext.okhttp3}"
+    implementation "com.squareup.retrofit2:retrofit:${rootProject.ext.rxjava}"
+    implementation "com.squareup.retrofit2:converter-gson:${rootProject.ext.rxjava}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${rootProject.ext.rxjava}"
+    implementation "com.squareup.picasso:picasso:${rootProject.ext.picasso}"
+    // binding view //noinspection AnnotationProcessorOnCompilePath
+    implementation "com.jakewharton:butterknife:${rootProject.ext.butterKnife}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${rootProject.ext.butterKnife}"
+}
