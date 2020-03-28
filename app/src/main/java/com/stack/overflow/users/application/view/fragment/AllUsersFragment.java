@@ -2,7 +2,6 @@ package com.stack.overflow.users.application.view.fragment;
 
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -22,6 +21,7 @@ import com.stack.overflow.users.base.utils.RecyclerViewScrollEvent;
 import com.stack.overflow.users.base.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import butterknife.BindView;
 
 /**
@@ -33,9 +33,9 @@ public class AllUsersFragment extends BaseFragment implements GetAllUsersView, G
 
     @BindView(R.id.rcvUsers) RecyclerView mRcvUsers;
     @BindView(R.id.tvNoData) AppCompatTextView mTvNoData;
-    private AllUsersPresenter mAllUserPresenter;
-    private FavoriteUsersPresenter mFavoriteUsersPresenter;
-    private UsersAdapter mAdapter;
+    @Inject AllUsersPresenter mAllUserPresenter;
+    @Inject FavoriteUsersPresenter mFavoriteUsersPresenter;
+    @Inject UsersAdapter mAdapter;
     private long mTotalItems = 0;
     private int mPage = 1;
     private static final int PAGE_SIZE = 30;
@@ -44,7 +44,6 @@ public class AllUsersFragment extends BaseFragment implements GetAllUsersView, G
      * Initialize RecyclerView
      */
     private void initializeRecyclerView() {
-        mAdapter = new UsersAdapter();
         mAdapter.setListener(this);
         mRcvUsers.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.activity());
@@ -55,7 +54,7 @@ public class AllUsersFragment extends BaseFragment implements GetAllUsersView, G
             @Override protected void loadMoreItems() {
                 mTotalItems += PAGE_SIZE;
                 mPage++;
-                mAllUserPresenter.getListUser(mPage, PAGE_SIZE);
+                mAllUserPresenter.getListUser(mPage, PAGE_SIZE, getString(R.string.stack_overflow_site), getString(R.string.sort_by), getString(R.string.order_by));
             }
 
             @Override public boolean isLastPage(long currentTotalItemCount) {
@@ -75,15 +74,9 @@ public class AllUsersFragment extends BaseFragment implements GetAllUsersView, G
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeRecyclerView();
-        if (mAllUserPresenter == null) {
-            mAllUserPresenter = new AllUsersPresenter();
-        }
         mAllUserPresenter.bindView(this);
-        if (mFavoriteUsersPresenter == null) {
-            mFavoriteUsersPresenter = new FavoriteUsersPresenter();
-        }
         mFavoriteUsersPresenter.bindView(this);
-        mAllUserPresenter.getListUser(mPage, PAGE_SIZE);
+        mAllUserPresenter.getListUser(mPage, PAGE_SIZE, getString(R.string.stack_overflow_site), getString(R.string.sort_by), getString(R.string.order_by));
     }
 
     @Override public void onDestroyView() {

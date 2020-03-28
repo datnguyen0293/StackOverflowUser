@@ -7,6 +7,7 @@ import com.stack.overflow.users.base.BasePresenter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * @author dat nguyen
@@ -15,9 +16,9 @@ import java.util.Objects;
 
 public class FavoriteUsersPresenter extends BasePresenter<GetFavoriteUsersView> {
 
-    public FavoriteUsersPresenter() {
-        super();
-        // Do nothing
+    public FavoriteUsersPresenter(ServiceCall services, CompositeDisposable compositeDisposable) {
+        mServices = services;
+        mCompositeDisposable = compositeDisposable;
     }
 
     public void getFavoriteUsers() {

@@ -1,6 +1,5 @@
 package com.stack.overflow.users.application.presenter;
 
-import com.stack.overflow.users.StackOverflowApplication;
 import com.stack.overflow.users.application.model.UserItem;
 import com.stack.overflow.users.application.presenter.service.ServiceCall;
 import com.stack.overflow.users.application.view.GetAllUsersView;
@@ -8,6 +7,7 @@ import com.stack.overflow.users.base.BasePresenter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * @author dat nguyen
@@ -16,14 +16,14 @@ import java.util.Objects;
 
 public class AllUsersPresenter extends BasePresenter<GetAllUsersView> {
 
-    public AllUsersPresenter() {
-        super();
-        // Do nothing
+    public AllUsersPresenter(ServiceCall services, CompositeDisposable compositeDisposable) {
+        mServices = services;
+        mCompositeDisposable = compositeDisposable;
     }
 
-    public void getListUser(int page, int pageSize) {
+    public void getListUser(int page, int pageSize, String site, String creation, String sort) {
         Objects.requireNonNull(view()).showLoadingDialog();
-        mDisposable = mServices.getListUsers(page, pageSize, new ServiceCall.ApiCallback() {
+        mDisposable = mServices.getListUsers(page, pageSize, site, creation, sort, new ServiceCall.ApiCallback() {
             @Override
             public void responseSucceed(Object obj) {
                 if (!((List<?>)obj).isEmpty()) {

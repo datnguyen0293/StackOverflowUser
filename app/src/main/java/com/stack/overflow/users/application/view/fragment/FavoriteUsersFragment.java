@@ -16,6 +16,7 @@ import com.stack.overflow.users.application.view.listener.UsersListener;
 import com.stack.overflow.users.base.BaseFragment;
 import com.stack.overflow.users.base.utils.Utils;
 import java.util.List;
+import javax.inject.Inject;
 import butterknife.BindView;
 
 /**
@@ -27,11 +28,10 @@ public class FavoriteUsersFragment extends BaseFragment implements GetFavoriteUs
 
     @BindView(R.id.rcvUsers) RecyclerView mRcvUsers;
     @BindView(R.id.tvNoData) AppCompatTextView mTvNoData;
-    private FavoriteUsersAdapter mAdapter;
-    private FavoriteUsersPresenter mPresenter;
+    @Inject FavoriteUsersAdapter mAdapter;
+    @Inject FavoriteUsersPresenter mPresenter;
 
     private void initializeRecyclerView() {
-        mAdapter = new FavoriteUsersAdapter();
         mAdapter.setListener(this);
         mRcvUsers.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.activity());
@@ -46,9 +46,6 @@ public class FavoriteUsersFragment extends BaseFragment implements GetFavoriteUs
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeRecyclerView();
-        if (mPresenter == null) {
-            mPresenter = new FavoriteUsersPresenter();
-        }
         mPresenter.bindView(this);
     }
 

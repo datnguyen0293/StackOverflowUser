@@ -18,10 +18,6 @@ import java.util.List;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
 
-    public static SQLiteHelper getInstance(Context context) {
-        return new SQLiteHelper(context);
-    }
-
     /**
      * Version number to upgrade database version
      * each time if you Add, Edit table, you need to change the version number.
@@ -41,9 +37,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String COLUMN_REPUTATION = "Reputation";
     private static final String COLUMN_LAST_ACCESS_DATE = "LastAccessDate";
     private static final String COLUMN_LOCATION = "Location";
+    private Context mContext;
 
-    private SQLiteHelper(Context context) {
+    public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
     }
 
     public List<UserItem> getFavoriteUsers() {
@@ -78,14 +76,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         final String SELECT_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_USER_ID + " = " + userItem.getUserId();
         Cursor cursor = database.rawQuery(SELECT_QUERY, null);
 
-        long userId;
         if (cursor.getCount() > 0) {
-            userId = database.delete(TABLE_NAME, COLUMN_USER_ID + "= ?", new String[]{String.valueOf(userItem.getUserId())});
+            database.delete(TABLE_NAME, COLUMN_USER_ID + "= ?", new String[]{String.valueOf(userItem.getUserId())});
         } else {
             ContentValues values = new ContentValues();
             values.put(COLUMN_USER_ID, userItem.getUserId());
             values.put(COLUMN_USER_NAME, userItem.getUserName());
-            values.put(COLUMN_USER_AVATAR, Utils.toBytes(userItem.getUserAvatar()));
+            values.put(COLUMN_USER_AVATAR, Utils.toBytes(mContext, userItem.getUserAvatar()));
             values.put(COLUMN_REPUTATION, userItem.getReputation());
             values.put(COLUMN_LAST_ACCESS_DATE, userItem.getLastAccessDate());
             values.put(COLUMN_LOCATION, userItem.getLocation());

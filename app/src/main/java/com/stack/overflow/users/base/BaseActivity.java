@@ -7,18 +7,21 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import com.stack.overflow.users.R;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import dagger.android.support.DaggerAppCompatActivity;
+import retrofit2.HttpException;
 
 /**
  * @author dat nguyen
  * @since 2019 Sep 13
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements BaseView {
+public abstract class BaseActivity extends DaggerAppCompatActivity implements BaseView {
     private Unbinder mUnbinder;
     private ProgressDialog mLoadingDialog;
     private AlertDialog mErrorDialog;
@@ -88,17 +91,26 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     @Override public void showErrorDialog(String errorMessage) {
         if (mErrorDialog == null) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setMessage(errorMessage)
+            mErrorDialog = new AlertDialog.Builder(this)
+                    .setMessage(errorMessage)
                     .setCancelable(false)
                     .setOnCancelListener(DialogInterface::dismiss)
-                    .setPositiveButton(R.string.action_close, (dialog, which) -> dialog.dismiss());
-            mErrorDialog = dialogBuilder.create();
+                    .setPositiveButton(R.string.action_close, (dialog, which) -> dialog.dismiss()).create();
         }
 
         if (!mErrorDialog.isShowing()) {
             mErrorDialog.setMessage(errorMessage);
             mErrorDialog.show();
         }
+    }
+
+    @Override public void showErrorDialog(Throwable throwable) {
+        String message = throwable.getMessage();
+        if (throwable instanceof HttpException || throwable instanceof UnknownHostException) {
+            message = getString(R.string.err_network_not_connected);
+        } else if (throwable instanceof SocketTimeoutException) {
+            message = getString(R.string.err_timeout);
+        }
+        showErrorDialog(message);
     }
 }

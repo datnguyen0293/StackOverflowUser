@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.stack.overflow.users.R;
 import com.stack.overflow.users.application.model.Reputation;
@@ -21,6 +22,7 @@ import com.stack.overflow.users.base.utils.RecyclerViewScrollEvent;
 import com.stack.overflow.users.base.utils.Utils;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
 import butterknife.BindView;
 /**
  * @author dat nguyen
@@ -37,8 +39,9 @@ public class ReputationActivity extends BaseActivity implements GetReputationVie
     @BindView(R.id.rcvReputation) RecyclerView mRcvReputation;
     @BindView(R.id.btnBookmark) AppCompatImageButton mBtnBookmark;
     @BindView(R.id.tvNoData) AppCompatTextView mTvNoData;
-    private ReputationPresenter mPresenter;
-    private ReputationAdapter mAdapter;
+    @Inject ReputationPresenter mPresenter;
+    @Inject ReputationAdapter mAdapter;
+    @Inject LinearLayoutManager mLinearLayoutManager;
     private UserItem mUserItem;
     private long mTotalItems = 0;
     private int mPage = 1;
@@ -55,7 +58,7 @@ public class ReputationActivity extends BaseActivity implements GetReputationVie
      * @param data The user's information
      */
     private void displayUserInformation(UserItem data) {
-        new Picasso.Builder(this).build().load(data.getUserAvatar()).fit().into(mImageAvatar);
+        new Picasso.Builder(this).build().load(data.getUserAvatar()).memoryPolicy(MemoryPolicy.NO_CACHE).fit().into(mImageAvatar);
         mTvUserName.setText(data.getUserName() != null ? data.getUserName() : "");
         mTvLocation.setText(String.format(Locale.getDefault(), "Location: %s", data.getLocation() != null ? data.getLocation() : ""));
         mTvLastAccessDate.setText(String.format(Locale.getDefault(), "Last access date: %n%s", Utils.formatDate(data.getLastAccessDate())));
@@ -66,17 +69,15 @@ public class ReputationActivity extends BaseActivity implements GetReputationVie
      * Initialize RecyclerView
      */
     private void initializeRecyclerView() {
-        mAdapter = new ReputationAdapter();
         mRcvReputation.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        mRcvReputation.setLayoutManager(linearLayoutManager);
+        mRcvReputation.setLayoutManager(mLinearLayoutManager);
         mRcvReputation.setAdapter(mAdapter);
         // Scroll to load more data
-        mRcvReputation.addOnScrollListener(new RecyclerViewScrollEvent(linearLayoutManager) {
+        mRcvReputation.addOnScrollListener(new RecyclerViewScrollEvent(mLinearLayoutManager) {
             @Override protected void loadMoreItems() {
                 mTotalItems += PAGE_SIZE;
                 mPage++;
-                mPresenter.getListReputation(mUserItem.getUserId(), mPage, PAGE_SIZE);
+                mPresenter.getListReputation(mUserItem.getUserId(), mPage, PAGE_SIZE, getString(R.string.stack_overflow_site), getString(R.string.sort_by), getString(R.string.order_by));
             }
 
             @Override public boolean isLastPage(long currentTotalItemCount) {
@@ -100,15 +101,12 @@ public class ReputationActivity extends BaseActivity implements GetReputationVie
         }
         mBtnBookmark.setVisibility(View.GONE);
         initializeRecyclerView();
-        if (mPresenter == null) {
-            mPresenter = new ReputationPresenter();
-        }
         mPresenter.bindView(this);
         if (getIntent() != null) {
             mUserItem = getIntent().getParcelableExtra(ARG_USER_ITEM);
             if (mUserItem != null) {
                 displayUserInformation(mUserItem);
-                mPresenter.getListReputation(mUserItem.getUserId(), mPage, PAGE_SIZE);
+                mPresenter.getListReputation(mUserItem.getUserId(), mPage, PAGE_SIZE, getString(R.string.stack_overflow_site), getString(R.string.sort_by), getString(R.string.order_by));
             }
         }
     }

@@ -1,8 +1,6 @@
 package com.stack.overflow.users.application.presenter.service;
 
 import com.stack.overflow.users.BuildConfig;
-import com.stack.overflow.users.R;
-import com.stack.overflow.users.StackOverflowApplication;
 import com.stack.overflow.users.application.database.SQLiteHelper;
 import com.stack.overflow.users.application.model.UserItem;
 import com.stack.overflow.users.base.utils.LoggerUtil;
@@ -10,16 +8,19 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ServiceCall {
     private ServiceApi mServiceApi;
+    private SQLiteHelper mSqLiteHelper;
 
-    public ServiceCall() {
-        mServiceApi = ServiceFactory.create();
+    public ServiceCall(ServiceApi serviceApi, SQLiteHelper sqLiteHelper) {
+        mServiceApi = serviceApi;
+        mSqLiteHelper = sqLiteHelper;
     }
 
     public interface ApiCallback {
@@ -30,13 +31,10 @@ public class ServiceCall {
         void callbackFail(Throwable throwable);
     }
 
-    public Disposable getListUsers(int page, int pageSize, final ApiCallback callback) {
-        if (StackOverflowApplication.getInstance().isNetWorkNotConnected()) {
-            return (Disposable) Observable.error(new Exception(StackOverflowApplication.getInstance().getString(R.string.error_network)));
-        }
-        return mServiceApi.getUsers(page, pageSize, StackOverflowApplication.getInstance().getString(R.string.stack_overflow_site), StackOverflowApplication.getInstance().getString(R.string.sort_by), StackOverflowApplication.getInstance().getString(R.string.order_by), BuildConfig.STACK_OVERFLOW_APPLICATION_ID)
-                .subscribeOn(StackOverflowApplication.getInstance().subscribeScheduler())
-                .observeOn(StackOverflowApplication.getInstance().observeScheduler())
+    public Disposable getListUsers(int page, int pageSize, String site, String creation, String sort, final ApiCallback callback) {
+        return mServiceApi.getUsers(page, pageSize, site, creation, sort, BuildConfig.STACK_OVERFLOW_APPLICATION_ID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(usersResponse -> {
                     if (usersResponse != null) {
                         if (usersResponse.getListUserItems() != null) {
@@ -52,13 +50,10 @@ public class ServiceCall {
                 });
     }
 
-    public Disposable getListReputations(long userId, int page, int pageSize, final ApiCallback callback) {
-        if (StackOverflowApplication.getInstance().isNetWorkNotConnected()) {
-            return (Disposable) Observable.error(new Exception(StackOverflowApplication.getInstance().getString(R.string.error_network)));
-        }
-        return mServiceApi.getReputations(userId, page, pageSize, StackOverflowApplication.getInstance().getString(R.string.stack_overflow_site), StackOverflowApplication.getInstance().getString(R.string.sort_by), StackOverflowApplication.getInstance().getString(R.string.order_by), BuildConfig.STACK_OVERFLOW_APPLICATION_ID)
-                .subscribeOn(StackOverflowApplication.getInstance().subscribeScheduler())
-                .observeOn(StackOverflowApplication.getInstance().observeScheduler())
+    public Disposable getListReputations(long userId, int page, int pageSize, String site, String creation, String sort, final ApiCallback callback) {
+        return mServiceApi.getReputations(userId, page, pageSize, site, creation, sort, BuildConfig.STACK_OVERFLOW_APPLICATION_ID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(usersResponse -> {
                     if (usersResponse != null) {
                         if (usersResponse.getListReputationItems() != null) {
@@ -75,9 +70,9 @@ public class ServiceCall {
     }
 
     public Disposable getFavoriteUsers(final ApiCallback callback){
-        return Single.defer((Callable<SingleSource<List<UserItem>>>) () -> Single.just(SQLiteHelper.getInstance(StackOverflowApplication.getInstance()).getFavoriteUsers()))
-                .subscribeOn(StackOverflowApplication.getInstance().subscribeScheduler())
-                .observeOn(StackOverflowApplication.getInstance().observeScheduler())
+        return Single.defer((Callable<SingleSource<List<UserItem>>>) () -> Single.just(mSqLiteHelper.getFavoriteUsers()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(listUsers -> {
                     if (listUsers != null) {
                         callback.responseSucceed(listUsers);
@@ -94,13 +89,13 @@ public class ServiceCall {
     public Disposable saveFavoriteUser(UserItem userItem, final ApiCallback callback) {
         return Completable.fromRunnable(()-> {
             try {
-                SQLiteHelper.getInstance(StackOverflowApplication.getInstance()).updateFavoriteUsers(userItem);
+                mSqLiteHelper.updateFavoriteUsers(userItem);
             } catch (IOException e) {
                 LoggerUtil.e(ServiceCall.class.getSimpleName(), "saveFavoriteUser(UserItem userItem)", e.getMessage(), e);
             }
         })
-                .subscribeOn(StackOverflowApplication.getInstance().subscribeScheduler())
-                .observeOn(StackOverflowApplication.getInstance().observeScheduler())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> callback.responseSucceed(null), callback::callbackFail);
     }
 

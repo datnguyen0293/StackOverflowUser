@@ -18,6 +18,7 @@ import com.stack.overflow.users.application.view.fragment.FavoriteUsersFragment;
 import com.stack.overflow.users.base.BaseActivity;
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
+import javax.inject.Inject;
 import butterknife.BindView;
 
 /**
@@ -29,6 +30,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
+    @Inject AllUsersFragment mAllUsersFragment;
+    @Inject FavoriteUsersFragment mFavoriteUsersFragment;
 
     @Override protected int getLayoutResourceId() {
         return R.layout.activity_main;
@@ -43,8 +46,8 @@ public class MainActivity extends BaseActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setupViewPager() {
         UsersPagerAdapter mPagerAdapter = new UsersPagerAdapter(fragmentManager());
-        mPagerAdapter.addFragment(new AllUsersFragment(), getString(R.string.all));
-        mPagerAdapter.addFragment(new FavoriteUsersFragment(), getString(R.string.favorite));
+        mPagerAdapter.addFragment(mAllUsersFragment, getString(R.string.all));
+        mPagerAdapter.addFragment(mFavoriteUsersFragment, getString(R.string.favorite));
 
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setPageTransformer(true, new AccordionTransformer());

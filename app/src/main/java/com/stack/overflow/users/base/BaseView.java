@@ -12,5 +12,7 @@ public interface BaseView {
 
     void showErrorDialog(String errorMessage);
 
+    void showErrorDialog(Throwable throwable);
+
     BaseActivity activity();
 }

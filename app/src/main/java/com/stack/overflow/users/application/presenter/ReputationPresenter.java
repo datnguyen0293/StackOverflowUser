@@ -7,6 +7,7 @@ import com.stack.overflow.users.base.BasePresenter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * @author dat nguyen
@@ -14,14 +15,14 @@ import java.util.Objects;
  */
 
 public class ReputationPresenter extends BasePresenter<GetReputationView> {
-    public ReputationPresenter() {
-        super();
-        // Do nothing
+    public ReputationPresenter(ServiceCall services, CompositeDisposable compositeDisposable) {
+        mServices = services;
+        mCompositeDisposable = compositeDisposable;
     }
 
-    public void getListReputation(long userId, int page, int pageSize) {
+    public void getListReputation(long userId, int page, int pageSize, String site, String creation, String sort) {
         Objects.requireNonNull(view()).showLoadingDialog();
-        mDisposable = mServices.getListReputations(userId, page, pageSize, new ServiceCall.ApiCallback() {
+        mDisposable = mServices.getListReputations(userId, page, pageSize, site, creation, sort, new ServiceCall.ApiCallback() {
             @Override
             public void responseSucceed(Object obj) {
                 if (!((List<?>)obj).isEmpty()) {

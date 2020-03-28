@@ -51,4 +51,10 @@ dependencies {
     // binding view //noinspection AnnotationProcessorOnCompilePath
     implementation "com.jakewharton:butterknife:${rootProject.ext.butterKnife}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${rootProject.ext.butterKnife}"
+    // Dagger dependencies
+    implementation "com.google.dagger:dagger:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.dagger"
 }

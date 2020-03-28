@@ -1,5 +1,6 @@
 package com.stack.overflow.users.base.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -55,8 +56,8 @@ public class Utils {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
-    public static byte[] toBytes(String imageUrl) throws IOException {
-        Bitmap bitmap = new  Picasso.Builder(StackOverflowApplication.getInstance()).build().load(imageUrl).get();
+    public static byte[] toBytes(Context context, String imageUrl) throws IOException {
+        Bitmap bitmap = new  Picasso.Builder(context).build().load(imageUrl).get();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();

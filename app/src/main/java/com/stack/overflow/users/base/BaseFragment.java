@@ -6,16 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import dagger.android.support.DaggerFragment;
 
 /**
  * @author dat nguyen
  * @since 2019 Sep 13
  */
 
-public abstract class BaseFragment extends Fragment implements BaseView {
+public abstract class BaseFragment extends DaggerFragment implements BaseView {
 
     private Unbinder mUnBinder;
 
@@ -54,6 +54,10 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
     @Override public void showErrorDialog(String errorMessage) {
         activity().showErrorDialog(errorMessage);
+    }
+
+    @Override public void showErrorDialog(Throwable throwable) {
+        activity().showErrorDialog(throwable);
     }
 
     @Override public BaseActivity activity(){

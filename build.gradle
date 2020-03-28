@@ -47,4 +47,5 @@ ext {
     recyclerView = "1.2.0-alpha01"
     materialDesign = "1.1.0"
     viewPagerTransform = "2.0.24"
+    dagger = "2.27"
 }

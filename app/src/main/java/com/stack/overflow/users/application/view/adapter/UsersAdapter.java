@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.stack.overflow.users.R;
 import com.stack.overflow.users.application.model.UserItem;
@@ -56,7 +57,7 @@ public class UsersAdapter extends BaseRecyclerViewAdapter<UserItem, UsersViewHol
         Drawable bookmarked = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_favorite_on);
         Drawable unBookmarked = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_favorite);
         holder.mBtnBookmark.setImageDrawable(unBookmarked);
-        new Picasso.Builder(holder.itemView.getContext()).build().load(data.getUserAvatar()).fit().into(holder.mImageAvatar);
+        new Picasso.Builder(holder.itemView.getContext()).build().load(data.getUserAvatar()).memoryPolicy(MemoryPolicy.NO_CACHE).fit().into(holder.mImageAvatar);
         holder.mBtnBookmark.setImageDrawable(isFavorite(data) ? bookmarked : unBookmarked);
         holder.mTvUserName.setText(data.getUserName() != null ? data.getUserName() : "");
         holder.mTvLocation.setText(String.format(Locale.getDefault(), "Location: %s", data.getLocation() != null ? data.getLocation() : ""));
