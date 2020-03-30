@@ -7,13 +7,14 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import com.stack.overflow.users.R;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import dagger.android.support.DaggerAppCompatActivity;
+import dagger.android.AndroidInjection;
 import retrofit2.HttpException;
 
 /**
@@ -21,7 +22,7 @@ import retrofit2.HttpException;
  * @since 2019 Sep 13
  */
 
-public abstract class BaseActivity extends DaggerAppCompatActivity implements BaseView {
+public abstract class BaseActivity extends AppCompatActivity implements BaseView {
     private Unbinder mUnbinder;
     private ProgressDialog mLoadingDialog;
     private AlertDialog mErrorDialog;
@@ -48,6 +49,7 @@ public abstract class BaseActivity extends DaggerAppCompatActivity implements Ba
     }
 
     @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         if (getLayoutResourceId() != 0)
             setContentView(getLayoutResourceId());
