@@ -2,7 +2,7 @@ package com.stack.overflow.users.di.components;
 
 import com.stack.overflow.users.StackOverflowApplication;
 import com.stack.overflow.users.di.module.ApplicationModule;
-import com.stack.overflow.users.di.module.binding.BindingModule;
+import com.stack.overflow.users.di.module.binding.ActivityBindingModule;
 import javax.inject.Singleton;
 import dagger.BindsInstance;
 import dagger.Component;
@@ -11,7 +11,7 @@ import dagger.android.AndroidInjector;
 
 @Singleton @Component(modules = {
         AndroidInjectionModule.class,
-        BindingModule.class,
+        ActivityBindingModule.class,
         ApplicationModule.class})
 public interface ApplicationComponent extends AndroidInjector<StackOverflowApplication> {
 

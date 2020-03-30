@@ -6,17 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import dagger.android.support.AndroidSupportInjection;
+import dagger.android.support.DaggerFragment;
 
 /**
  * @author dat nguyen
  * @since 2019 Sep 13
  */
 
-public abstract class BaseFragment extends Fragment implements BaseView {
+public abstract class BaseFragment extends DaggerFragment implements BaseView {
 
     private Unbinder mUnBinder;
 
@@ -24,11 +23,6 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
     public void onFragmentResume() {
         // For overriding
-    }
-
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-        AndroidSupportInjection.inject(this);
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable @Override
