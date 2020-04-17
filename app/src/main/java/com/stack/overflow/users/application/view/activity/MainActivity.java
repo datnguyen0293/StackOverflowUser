@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import javax.inject.Inject;
 import butterknife.BindView;
+import dagger.MapKey;
 
 /**
  * @author dat nguyen
@@ -28,13 +29,13 @@ import butterknife.BindView;
 
 public class MainActivity extends BaseActivity {
 
-    @BindView(R.id.tab_layout) TabLayout mTabLayout;
+    @MapKey(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
     @Inject AllUsersFragment mAllUsersFragment;
     @Inject FavoriteUsersFragment mFavoriteUsersFragment;
 
-    @Override protected int getLayoutResourceId() {
-        return R.layout.activity_main;
+    public MainActivity() {
+        super(R.layout.activity_main);
     }
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {

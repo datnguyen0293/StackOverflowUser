@@ -40,6 +40,10 @@ public class AllUsersFragment extends BaseFragment implements GetAllUsersView, G
     private int mPage = 1;
     private static final int PAGE_SIZE = 30;
 
+    public AllUsersFragment() {
+        super(R.layout.fragment_all_users);
+    }
+
     /**
      * Initialize RecyclerView
      */
@@ -65,10 +69,6 @@ public class AllUsersFragment extends BaseFragment implements GetAllUsersView, G
                 return false;
             }
         });
-    }
-
-    @Override protected int getLayoutResourceId() {
-        return R.layout.fragment_all_users;
     }
 
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

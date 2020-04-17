@@ -47,6 +47,10 @@ public class ReputationActivity extends BaseActivity implements GetReputationVie
     private int mPage = 1;
     private static final int PAGE_SIZE = 30;
 
+    public ReputationActivity() {
+        super(R.layout.activity_reputation);
+    }
+
     public static void start(BaseFragment baseFragment, UserItem userItem) {
         Intent starter = new Intent(baseFragment.activity(), ReputationActivity.class);
         starter.putExtra(ARG_USER_ITEM, userItem);
@@ -88,10 +92,6 @@ public class ReputationActivity extends BaseActivity implements GetReputationVie
                 return false;
             }
         });
-    }
-
-    @Override protected int getLayoutResourceId() {
-        return R.layout.activity_reputation;
     }
 
     @Override protected void onCreate(Bundle savedInstanceState) {

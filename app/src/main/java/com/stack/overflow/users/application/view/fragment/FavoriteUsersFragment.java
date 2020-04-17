@@ -39,8 +39,8 @@ public class FavoriteUsersFragment extends BaseFragment implements GetFavoriteUs
         mRcvUsers.setAdapter(mAdapter);
     }
 
-    @Override protected int getLayoutResourceId() {
-        return R.layout.fragment_favorite_users;
+    public FavoriteUsersFragment() {
+        super(R.layout.fragment_favorite_users);
     }
 
     @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

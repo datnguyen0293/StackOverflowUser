@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.annotation.CallSuper;
+import androidx.annotation.ContentView;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -27,7 +29,10 @@ public abstract class BaseActivity extends DaggerAppCompatActivity implements Ba
     private AlertDialog mErrorDialog;
     protected ActionBar mActionBar;
 
-    protected abstract int getLayoutResourceId();
+    @ContentView
+    public BaseActivity(@LayoutRes int contentLayoutId) {
+        super(contentLayoutId);
+    }
 
     public void setupActionBar() {
         mActionBar = getSupportActionBar();
@@ -49,8 +54,6 @@ public abstract class BaseActivity extends DaggerAppCompatActivity implements Ba
 
     @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getLayoutResourceId() != 0)
-            setContentView(getLayoutResourceId());
         mUnbinder = ButterKnife.bind(this);
         setupActionBar();
     }

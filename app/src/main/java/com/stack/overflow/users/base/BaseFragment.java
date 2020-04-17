@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.ContentView;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import butterknife.ButterKnife;
@@ -19,18 +22,19 @@ public abstract class BaseFragment extends DaggerFragment implements BaseView {
 
     private Unbinder mUnBinder;
 
-    protected abstract int getLayoutResourceId();
+    @ContentView
+    public BaseFragment(@LayoutRes int contentLayoutId) {
+        super(contentLayoutId);
+    }
 
     public void onFragmentResume() {
         // For overriding
     }
 
-    @Nullable @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(getLayoutResourceId(), container, false);
-        mUnBinder = ButterKnife.bind(this, rootView);
-        return rootView;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mUnBinder = ButterKnife.bind(this, getView());
     }
 
     @Override public void onDestroyView() {
