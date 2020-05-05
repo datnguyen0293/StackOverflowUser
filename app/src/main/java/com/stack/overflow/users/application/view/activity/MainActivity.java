@@ -29,7 +29,7 @@ import dagger.MapKey;
 
 public class MainActivity extends BaseActivity {
 
-    @MapKey(R.id.tab_layout) TabLayout mTabLayout;
+    @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
     @Inject AllUsersFragment mAllUsersFragment;
     @Inject FavoriteUsersFragment mFavoriteUsersFragment;
