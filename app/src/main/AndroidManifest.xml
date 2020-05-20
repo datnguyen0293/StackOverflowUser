@@ -19,6 +19,13 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".application.view.activity.MainActivity"
             android:screenOrientation="fullSensor">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity android:name=".application.view.activity.AllUsersActivity"
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

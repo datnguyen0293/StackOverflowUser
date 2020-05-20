@@ -2,6 +2,8 @@ package com.stack.overflow.users.di.module.binding;
 
 import android.content.Context;
 import com.stack.overflow.users.StackOverflowApplication;
+import com.stack.overflow.users.application.view.activity.AllUsersActivity;
+import com.stack.overflow.users.di.module.AllUserActivityModule;
 import com.stack.overflow.users.di.module.MainActivityModule;
 import com.stack.overflow.users.di.module.ReputaionActivityModule;
 import com.stack.overflow.users.di.scopes.ActivityScope;
@@ -17,6 +19,8 @@ public abstract class ActivityBindingModule {
     abstract MainActivity mainActivity();
     @ActivityScope @ContributesAndroidInjector(modules = ReputaionActivityModule.class)
     abstract ReputationActivity reputationActivity();
+    @ActivityScope @ContributesAndroidInjector(modules = AllUserActivityModule.class)
+    abstract AllUsersActivity allUsersActivity();
     @Binds
     abstract Context bindApplication(StackOverflowApplication application);
 }
